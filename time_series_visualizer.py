@@ -5,7 +5,7 @@ from pandas.plotting import register_matplotlib_converters
 register_matplotlib_converters()
 
 # Import data (Make sure to parse dates. Consider setting index column to 'date'.)
-df = pd.read_csv('fcc-forum-pageviews.csv')
+df = pd.read_csv('fcc-forum-pageviews.csv',parse_dates=['date'])
 
 # Clean data
 df = df[(df['value'] > df['value'].quantile(0.025)) & (df['value'] < df['value'].quantile(0.975))]
@@ -31,17 +31,19 @@ def draw_line_plot():
 
 def draw_bar_plot():
     # Copy and modify data for monthly bar plot
-    df['year'] = df['date'].dt.year()
+    df['year'] = df['date'].dt.year
     df['month'] = df['date'].dt.month_name()
     df_bar = df.groupby(['year','month'], sort=False) ['value'].mean().unstack()
 
     # Draw bar plot
-    ax = df_bar.plot(kind=bar, figsize=(12,6), legend=True, title='Average Daily Page Views')
+    ax = df_bar.plot(kind='bar', figsize=(12,6), legend=True, title='Average Daily Page Views')
     ax.legend(title='Months',bbox_to_anchor=(1.05,1),loc='upper left')
     ax.set_xlabel('Years')
     ax.set_ylabel('Average Page Views')
     plt.xticks(rotation=45)
-    plt.show()
+    
+    #create the fig object
+    fig = ax.get_figure()
 
 
 
@@ -56,9 +58,8 @@ def draw_box_plot():
     # Prepare data for box plots (this part is done!)
     df_box = df.copy()
     df_box.reset_index(inplace=True)
-    df_box['date'] = pd.to_datetime(df_box['date'])
-    df_box['year'] = [d.year for d in df_box.date]
-    df_box['month'] = [d.strftime('%b') for d in df_box.date]
+    df_box['year'] = [d.year for d in df_box['date']]
+    df_box['month'] = [d.strftime('%b') for d in df_box['date']]
 
     # Draw box plots (using Seaborn)
     fig, axes = plt.subplots(1,2, figsize=(12,6))
@@ -86,5 +87,5 @@ def draw_box_plot():
 
 
 draw_line_plot()
-draw_box_plot()
 draw_bar_plot()
+draw_box_plot()
