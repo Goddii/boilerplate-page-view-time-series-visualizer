@@ -60,7 +60,8 @@ def draw_box_plot():
     df_box.reset_index(inplace=True)
     df_box['year'] = [d.year for d in df_box['date']]
     df_box['month'] = [d.strftime('%b') for d in df_box['date']]
-
+    df_box['year'] = df_box['year'].astype('category')
+    df_box['month'] = df_box['month'].astype('category')
     # Draw box plots (using Seaborn)
     fig, axes = plt.subplots(1,2, figsize=(12,6))
     plt.subplots_adjust(wspace=0.4)
@@ -70,7 +71,7 @@ def draw_box_plot():
     axes[0].set_xlabel('Year')
     axes[0].set_ylabel('Value')
 
-    sns.boxplot(data=df.box, x='month', y='value', ax=axes[1],order=['January','February','March','April','May','June','July','August','September','October','November','December'])
+    sns.boxplot(data=df_box, x='month', y='value', ax=axes[1],order=['January','February','March','April','May','June','July','August','September','October','November','December'])
     axes[1].set_title('Month-wise Box Plot(Seasonality)')
     axes[1].set_xlabel('Month')
     axes[1].set_ylabel('Value')
