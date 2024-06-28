@@ -35,9 +35,15 @@ def draw_bar_plot():
     df['month'] = df['date'].dt.month_name()
     df_bar = df.groupby(['year','month'], sort=False) ['value'].mean().unstack()
 
+    # month order
+    month_order = ['January','February','March','April','May','June','July','August','September','October','November','December']
+
+    #reindex the dataframe
+    df_bar = df_bar.reindex(columns=month_order)
+
     # Draw bar plot
-    ax = df_bar.plot(kind='bar', figsize=(12,6), legend=True, title='Average Daily Page Views')
-    ax.legend(title='Months',bbox_to_anchor=(1.05,1),loc='upper left')
+    ax = df_bar.plot(kind='bar', figsize=(20,6), legend=True, title='Average Daily Page Views')
+    ax.legend(title='Months',loc='upper left')
     ax.set_xlabel('Years')
     ax.set_ylabel('Average Page Views')
     plt.xticks(rotation=45)
